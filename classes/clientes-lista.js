@@ -7,7 +7,7 @@ class ClientesLista {
     // agregar un cliente a la lista 
     agregarCliente(cliente) {
         this.lista.push(cliente);
-        console.log(this.lista);
+        console.log('nos piden agregar un cliente', this.lista);
         return cliente;
     }
     // actualizamos el nombre  del cliente
@@ -31,11 +31,11 @@ class ClientesLista {
                 cliente.nombre = nombre;
                 break;
             }
-            return nombre;
         }
         ;
         console.log('====== actualizando nombre Esp =====');
         console.log(this.lista);
+        console.log('===================================');
     }
     ;
     // actualizamos el nombre  del ESP
@@ -45,11 +45,11 @@ class ClientesLista {
                 cliente.mac = mac;
                 break;
             }
-            return cliente.nombre;
         }
         ;
         console.log('====== actualizando mac Esp =====');
         console.log(this.lista);
+        console.log('===================================');
     }
     ;
     // actualizamos el tipo del ESP
@@ -59,11 +59,11 @@ class ClientesLista {
                 cliente.tipo = tipo;
                 break;
             }
-            return cliente.nombre;
         }
         ;
         console.log('====== actualizando tipo Esp =====');
         console.log(this.lista);
+        console.log('===================================');
     }
     ;
     // actualizamos el tipo del ESP
@@ -73,11 +73,11 @@ class ClientesLista {
                 cliente.email = email;
                 break;
             }
-            return cliente.nombre;
         }
         ;
         console.log('====== actualizando  emailEsp =====');
         console.log(this.lista);
+        console.log('===================================');
     }
     ;
     // obtenemos lista de clientes
