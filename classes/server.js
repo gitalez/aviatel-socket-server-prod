@@ -56,13 +56,13 @@ class Server {
             //escuchando mensajes de los clientes 
             socket.escucharMensajeEsp(cliente, this.io);
             // escuchamos la configuracion del nombre del esp 
-            socket.configurarNombreEsp(cliente);
+            socket.configurarNombreEsp(cliente, this.io);
             // escuchamos la configuracion de la mac del esp 
-            socket.configurarMacEsp(cliente);
+            socket.configurarMacEsp(cliente, this.io);
             // escuchamos la configuracion del tipo del esp 
-            socket.configurarTipoEsp(cliente);
+            socket.configurarTipoEsp(cliente, this.io);
             // escuchamos la configuracion del  email del dueño del esp 
-            socket.configurarEmailEsp(cliente);
+            socket.configurarEmailEsp(cliente, this.io);
         });
     }
     // para levantar el servidor 
