@@ -15,15 +15,20 @@ const environment_1 = require("../global/environment");
 const socket_io_1 = __importDefault(require("socket.io"));
 const http_1 = __importDefault(require("http"));
 const socket = __importStar(require("../sockets/socket"));
+const path_1 = __importDefault(require("path"));
 // como lo unico que voy en esta clase es la clase pongo default , que es el paquete por defecto 
 class Server {
     constructor() {
         this.app = express_1.default();
         this.port = environment_1.SERVER_PORT;
         this.httpServer = new http_1.default.Server(this.app);
+        const publicPath = path_1.default.resolve(__dirname, '../public');
+        this.app.use(express_1.default.static(publicPath));
         this.io = socket_io_1.default(this.httpServer);
         this.escucharSockets();
     }
+    // este middle habilita la carpeta publica 
+    //app.use(express.static(publicPath));
     //este es un getter ( instance ) de la clase para acceder a esta
     //cuando  un metodo es estatico lo puedo llamar invocando la clase 
     static get instance() {
@@ -47,6 +52,17 @@ class Server {
             socket.configurarCliente(cliente, this.io);
             // escuchamos el evento obtener-clientes que nos solicita la app angular en listado clientes
             socket.obtenerClientesActivos(cliente, this.io);
+            //////////////// metodos para esp ///////////////////////
+            //escuchando mensajes de los clientes 
+            socket.escucharMensajeEsp(cliente, this.io);
+            // escuchamos la configuracion del nombre del esp 
+            socket.configurarNombreEsp(cliente);
+            // escuchamos la configuracion de la mac del esp 
+            socket.configurarMacEsp(cliente);
+            // escuchamos la configuracion del tipo del esp 
+            socket.configurarTipoEsp(cliente);
+            // escuchamos la configuracion del  email del dueño del esp 
+            socket.configurarEmailEsp(cliente);
         });
     }
     // para levantar el servidor 

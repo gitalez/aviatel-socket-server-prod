@@ -6,6 +6,8 @@ class Cliente {
         this.nombre = "sin-nombre";
         this.sala = "sin-sala";
         this.mac = "sin-mac";
+        this.tipo = "sin-tipo";
+        this.email = "sin-email";
     }
 }
 exports.Cliente = Cliente;

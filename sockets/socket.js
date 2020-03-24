@@ -17,6 +17,8 @@ exports.escucharDesconexionCliente = (cliente, io) => {
 // agrega un cliente a la lista  con solo su id , a la espera de ser configurado las demas propiedades
 exports.conectarCliente = (cliente, io) => {
     const cli = new cliente_model_1.Cliente(cliente.id); // este id es el idsocket 
+    // le envia el modelo cliente con solo el id , lo demas es 
+    // "sin-nombre" "sin-sala" "sin-mac";
     exports.clientesConectados.agregarCliente(cli);
 };
 // escuchar mensajes de un cliente
@@ -28,18 +30,20 @@ exports.escucharMensajeCliente = (cliente, io) => {
     cliente.on('mensaje', (payload) => {
         payload.idSocket = cliente.id;
         console.log('mensaje recibido:', payload);
-        // emito un evento 'mensaje-nuevo'  a todos los clientes conectados lo que me llego , una especie de eco 
-        //io.emit( 'mensaje-nuevo', payload ); // global 
-        io.in(cliente.id).emit('mensaje-privado', payload); //al que me lo envio 
+        // emito un evento 'mensaje-nuevo'  
+        // a todos los clientes conectados lo que me llego , una especie de eco 
+        io.emit('mensaje-nuevo', payload); // global 
     });
 };
-// escuchar la configuracion de un cliente ( el nombre , la sala y la mac )
+// escuchar la configuracion de un cliente ( el nombre y la sala si se implementa)
+// el cliente no tiene mac : es "sin-mac"
+// se configura el nombre y el tipo  : tipo cliente o tipo: esp
 exports.configurarCliente = (cliente, io) => {
     // escuchamos el evento configurar-cliente
     // el callback retorna a la app angular la respuesta de este  server 
     cliente.on('configurar-cliente', (payload, callback) => {
         //console.log('configurando cliente:', payload);
-        exports.clientesConectados.actualizarNombre(cliente.id, payload.nombre);
+        exports.clientesConectados.actualizarNombreYtipoCliente(cliente.id, payload.nombre, payload.tipo);
         // el seg arg es el payload que le enviamos que es la lits de conectados
         console.log('clientes conectados : ', exports.clientesConectados.getLista());
         io.emit('clientes-activos', exports.clientesConectados.getLista());
@@ -59,5 +63,70 @@ exports.obtenerClientesActivos = (cliente, io) => {
     cliente.on('obtener-clientes', () => {
         // el to se lo envia a uno solo 
         io.to(cliente.id).emit('clientes-activos', exports.clientesConectados.getLista());
+    });
+};
+// escuchar mensajes de un ESP
+// escucha evento mensaje-esp
+// responde con un emit mensaje-nuevo
+exports.escucharMensajeEsp = (cliente, io) => {
+    // payload es lo que se recibe 
+    cliente.on('mensaje-esp', (payload) => {
+        payload.idSocket = cliente.id;
+        console.log('mensaje del esp recibido:', payload);
+        // emito un msg-privado al cliente que me envio el evento mensaje 
+        io.to(cliente.id).emit('msg-privado', payload); //al que me lo envio 
+    });
+};
+// escuchar la configuracion del nombre de  un ESP
+exports.configurarNombreEsp = (cliente) => {
+    // escuchamos el evento configurar-nombre-esp
+    // el callback retorna a la app angular la respuesta de este  server 
+    cliente.on('configurar-nombre-esp', (payload, callback) => {
+        //console.log('configurando cliente:', payload);
+        const name = exports.clientesConectados.actualizarNombreEsp(cliente.id, payload.nombre);
+        callback({
+            ok: true,
+            cliente: cliente.id,
+            mensaje: `${name} es el  nuevo nombre`
+        });
+    });
+};
+// escuchar la configuracion de la mac de  un ESP
+exports.configurarMacEsp = (cliente) => {
+    // escuchamos el evento configurar-mac-esp
+    // el callback retorna a la app angular la respuesta de este  server 
+    cliente.on('configurar-mac-esp', (payload, callback) => {
+        const name = exports.clientesConectados.actualizarMacEsp(cliente.id, payload.mac);
+        callback({
+            ok: true,
+            cliente: cliente.id,
+            mensaje: ` el esp de nombre ${name}  tiene mac ${payload.mac}`
+        });
+    });
+};
+// escuchar la configuracion del tipo de un ESP
+exports.configurarTipoEsp = (cliente) => {
+    // escuchamos el evento configurar-tipo-esp
+    // el callback retorna a la app angular la respuesta de este  server 
+    cliente.on('configurar-tipo-esp', (payload, callback) => {
+        const name = exports.clientesConectados.actualizarTipoEsp(cliente.id, payload.tipo);
+        callback({
+            ok: true,
+            cliente: cliente.id,
+            mensaje: ` el esp de nombre ${name}  tiene tipo ${payload.tipo}`
+        });
+    });
+};
+// escuchar la configuracion del  email del dueño de un ESP
+exports.configurarEmailEsp = (cliente) => {
+    // escuchamos el evento configurar-email-esp
+    // el callback retorna a la app angular la respuesta de este  server 
+    cliente.on('configurar-email-esp', (payload, callback) => {
+        const name = exports.clientesConectados.actualizarEmailEsp(cliente.id, payload.email);
+        callback({
+            ok: true,
+            cliente: cliente.id,
+            mensaje: ` el esp de nombre ${name}  tiene  email ${payload.email}`
+        });
     });
 };

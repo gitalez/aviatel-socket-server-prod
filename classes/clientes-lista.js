@@ -7,20 +7,77 @@ class ClientesLista {
     // agregar un cliente a la lista 
     agregarCliente(cliente) {
         this.lista.push(cliente);
-        //console.log(this.lista);
+        console.log(this.lista);
         return cliente;
     }
     // actualizamos el nombre  del cliente
-    actualizarNombre(id, nombre) {
+    actualizarNombreYtipoCliente(id, nombre, tipo) {
         for (let cliente of this.lista) {
             if (cliente.idSocket === id) {
                 cliente.nombre = nombre;
+                cliente.tipo = tipo;
                 break;
             }
         }
         ;
         //console.log('====== actualizando cliente =====');
         //console.log(this.lista);
+    }
+    ;
+    // actualizamos el nombre  del ESP
+    actualizarNombreEsp(id, nombre) {
+        for (let cliente of this.lista) {
+            if (cliente.idSocket === id) {
+                cliente.nombre = nombre;
+                break;
+            }
+            return nombre;
+        }
+        ;
+        console.log('====== actualizando nombre Esp =====');
+        console.log(this.lista);
+    }
+    ;
+    // actualizamos el nombre  del ESP
+    actualizarMacEsp(id, mac) {
+        for (let cliente of this.lista) {
+            if (cliente.idSocket === id) {
+                cliente.mac = mac;
+                break;
+            }
+            return cliente.nombre;
+        }
+        ;
+        console.log('====== actualizando mac Esp =====');
+        console.log(this.lista);
+    }
+    ;
+    // actualizamos el tipo del ESP
+    actualizarTipoEsp(id, tipo) {
+        for (let cliente of this.lista) {
+            if (cliente.idSocket === id) {
+                cliente.tipo = tipo;
+                break;
+            }
+            return cliente.nombre;
+        }
+        ;
+        console.log('====== actualizando tipo Esp =====');
+        console.log(this.lista);
+    }
+    ;
+    // actualizamos el tipo del ESP
+    actualizarEmailEsp(id, email) {
+        for (let cliente of this.lista) {
+            if (cliente.idSocket === id) {
+                cliente.email = email;
+                break;
+            }
+            return cliente.nombre;
+        }
+        ;
+        console.log('====== actualizando  emailEsp =====');
+        console.log(this.lista);
     }
     ;
     // obtenemos lista de clientes
