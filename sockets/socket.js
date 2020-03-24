@@ -7,11 +7,19 @@ exports.clientesConectados = new clientes_lista_1.ClientesLista;
 // escuchar la desconexion de un cliente
 exports.escucharDesconexionCliente = (cliente, io) => {
     cliente.on('disconnect', () => {
+        var _a;
         console.log('Cliente desconectado');
         exports.clientesConectados.borrarCliente(cliente.id); // es el id del socket
-        // el segundo  arg es el payload que le enviamos que es la lits de conectados 
-        // lo saca de la lista y muestra los que quedaron
-        io.emit('clientes-activos', exports.clientesConectados.getLista());
+        let cli = exports.clientesConectados.getCliente(cliente.id);
+        if (((_a = cli) === null || _a === void 0 ? void 0 : _a.tipo) === "esp") {
+            // es un esp, no emito nada  
+        }
+        else {
+            // es un humano
+            // el segundo  arg es el payload que le enviamos que es la lits de conectados 
+            // lo saca de la lista y muestra los que quedaron
+            io.emit('clientes-activos', exports.clientesConectados.getLista());
+        }
     });
 };
 // agrega un cliente a la lista  con solo su id , a la espera de ser configurado las demas propiedades
@@ -71,8 +79,7 @@ exports.obtenerClientesActivos = (cliente, io) => {
 exports.escucharMensajeEsp = (cliente, io) => {
     // payload es lo que se recibe 
     cliente.on('mensaje-esp', (payload) => {
-        payload.idSocket = cliente.id;
-        console.log('mensaje del esp recibido:', payload);
+        console.log('mensaje recibido del esp :', payload);
         // emito un msg-privado al cliente que me envio el evento mensaje 
         io.to(cliente.id).emit('msg-privado', 'hemos recibido tu mensaje'); //al que me lo envio 
     });
@@ -80,9 +87,8 @@ exports.escucharMensajeEsp = (cliente, io) => {
 // escuchar la configuracion del nombre de  un ESP
 exports.configurarNombreEsp = (cliente, io) => {
     // escuchamos el evento configurar-nombre-esp
-    // el callback retorna a la app angular la respuesta de este  server 
     cliente.on('configurar-nombre-esp', (payload) => {
-        //console.log('configurando cliente:', payload);
+        console.log('mensaje recibido del esp :', payload);
         exports.clientesConectados.actualizarNombreEsp(cliente.id, payload.nombre);
         // emito un msg-privado al cliente que me envio el evento mensaje 
         io.to(cliente.id).emit('msg-privado', 'nuevo nombre'); //al que me lo envio 
@@ -91,8 +97,8 @@ exports.configurarNombreEsp = (cliente, io) => {
 // escuchar la configuracion de la mac de  un ESP
 exports.configurarMacEsp = (cliente, io) => {
     // escuchamos el evento configurar-mac-esp
-    // el callback retorna a la app angular la respuesta de este  server 
     cliente.on('configurar-mac-esp', (payload) => {
+        console.log('mensaje recibido del esp :', payload);
         exports.clientesConectados.actualizarMacEsp(cliente.id, payload.mac);
         // emito un msg-privado al cliente que me envio el evento mensaje 
         io.to(cliente.id).emit('msg-privado', 'nueva mac'); //al que me lo envio 
@@ -103,6 +109,7 @@ exports.configurarTipoEsp = (cliente, io) => {
     // escuchamos el evento configurar-tipo-esp
     // el callback retorna a la app angular la respuesta de este  server 
     cliente.on('configurar-tipo-esp', (payload) => {
+        console.log('mensaje recibido del esp :', payload);
         exports.clientesConectados.actualizarTipoEsp(cliente.id, payload.tipo);
         // emito un msg-privado al cliente que me envio el evento mensaje 
         io.to(cliente.id).emit('msg-privado', 'nuevo tipo'); //al que me lo envio 
@@ -111,10 +118,20 @@ exports.configurarTipoEsp = (cliente, io) => {
 // escuchar la configuracion del email del dueño de un ESP
 exports.configurarEmailEsp = (cliente, io) => {
     // escuchamos el evento configurar-email-esp
-    // el callback retorna a la app angular la respuesta de este  server 
     cliente.on('configurar-email-esp', (payload) => {
+        console.log('mensaje recibido del esp :', payload);
         exports.clientesConectados.actualizarEmailEsp(cliente.id, payload.email);
         // emito un msg-privado al cliente que me envio el evento 
         io.to(cliente.id).emit('msg-privado', 'tiene nuevo dueño'); //al que me lo envio 
+    });
+};
+// escuchar la configuracion  de la sala  de un ESP
+exports.configurarSalaEsp = (cliente, io) => {
+    // escuchamos el evento configurar-sala-esp
+    cliente.on('configurar-sala-esp', (payload) => {
+        exports.clientesConectados.actualizarSalaEsp(cliente.id, payload.sala);
+        console.log('mensaje recibido del esp :', payload);
+        // emito un msg-privado al cliente que me envio el evento 
+        io.to(cliente.id).emit('msg-privado', 'tiene nueva sala'); //al que me lo envio 
     });
 };

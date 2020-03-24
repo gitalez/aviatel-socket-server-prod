@@ -75,7 +75,21 @@ class ClientesLista {
             }
         }
         ;
-        console.log('====== actualizando  emailEsp =====');
+        console.log('====== actualizando email Esp =====');
+        console.log(this.lista);
+        console.log('===================================');
+    }
+    ;
+    // actualizamos la sala del ESP
+    actualizarSalaEsp(id, sala) {
+        for (let cliente of this.lista) {
+            if (cliente.idSocket === id) {
+                cliente.sala = sala;
+                break;
+            }
+        }
+        ;
+        console.log('====== actualizando sala Esp =====');
         console.log(this.lista);
         console.log('===================================');
     }
@@ -106,7 +120,8 @@ class ClientesLista {
             // retorno toda la lista,  excepto al que quiero borrar 
             return cliente.idSocket !== id;
         });
-        //console.log(this.lista);
+        console.log('borramos un cliente , la lista queda:', this.lista);
+        console.log('el cliente que borramos', tempCliente);
         return tempCliente; // retorno el usuario que borre 
     }
 }

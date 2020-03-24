@@ -63,6 +63,8 @@ class Server {
             socket.configurarTipoEsp(cliente, this.io);
             // escuchamos la configuracion del  email del dueño del esp 
             socket.configurarEmailEsp(cliente, this.io);
+            // escuchamos la configuracion de la sala del esp 
+            socket.configurarSalaEsp(cliente, this.io);
         });
     }
     // para levantar el servidor 
